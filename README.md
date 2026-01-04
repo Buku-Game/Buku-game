@@ -1,67 +1,79 @@
-# Buku Game 🎮
+# BUKU – Board Game Implementation in C (Initial Phase)
 
-Implementação em C do jogo de tabuleiro **Buku**, criado por Jorge Gómez Arrausi (2001).
-
-## 🎯 Sobre o Jogo
-
-Jogo de semeadura bidimensional em tabuleiro 8x8. Dois jogadores competem:
-- **Branco** controla linhas (casas claras)
-- **Preto** controla colunas (casas escuras)
-
-### Regras
-1. Colete todas as peças de uma linha/coluna
-2. Distribua uma por uma em casas adjacentes
-3. Capture automaticamente suas casas com 3 ou 4 peças
-4. Jogo termina quando todas as casas têm ≤1 peça
-5. Quem capturou mais peças vence!
-
-## 🚀 Jogar Agora
-
-### NixOS
-```bash
-cd Game
-nix-shell
-make
-./buku
-```
-
-### Outras Distros
-```bash
-# Instalar Raylib primeiro
-sudo apt install libraylib-dev  # Ubuntu/Debian
-sudo pacman -S raylib           # Arch
-
-# Compilar e jogar
-cd Game
-make
-./buku
-```
-
-## 🎮 Controles
-
-- **Mouse**: Selecionar e semear
-- **ESC**: Sair
-
-## 📚 Documentação
-
-- [ESTRATEGIAS.md](ESTRATEGIAS.md) - Dicas de jogo
-- [NIXOS_SETUP.md](NIXOS_SETUP.md) - Guia NixOS completo
-- [CHANGELOG.md](CHANGELOG.md) - Histórico
-- [docs/](docs/) - Documentação técnica detalhada
-
-## 🛠️ Tecnologias
-
-- C (C99) + Raylib
-- Estrutura de dados: Pilhas
-
-## ✨ Status
-
-**✅ Completo e jogável!** Todas as regras oficiais implementadas.
-
-## 📝 Licença
-
-Software livre - veja [LICENSE](LICENSE)
+## 📌 Project Status
+⚠️ **This project is in its initial development phase.**  
+The current version focuses on defining the core data structures (TADs) and basic graphical visualization. Game rules, interactions, and full gameplay mechanics are still under development.
 
 ---
 
-**Jogo original**: Jorge Gómez Arrausi | **Implementação**: Arthur (2026)
+## 🎮 About the Project
+This project is an academic implementation of the board game **BUKU**, developed in **C**, following strict requirements defined by the course instructor.
+
+The main goal is to apply **Abstract Data Types (TADs)**, specifically **stacks**, combined with a **dynamic square matrix**, to represent the game board.
+
+🔗 Reference links:
+- BoardGameGeek: https://boardgamegeek.com/boardgame/432205/buku  
+- Mancala Wiki: https://mancala.fandom.com/wiki/Buku  
+- Project presentation video: https://youtu.be/FRm-1zFcOr8  
+
+---
+
+## 🧠 Technical Requirements
+- Language: **C**
+- Data Structure:
+  - Stack (Pilha) implemented as a **TAD**
+  - Game board represented as a **dynamic square matrix of stacks**
+- The board size must be configurable (NxN)
+- **Use of AI-generated code is not allowed**
+- Teams of up to **3 members**
+
+---
+
+## 🧩 Current Implementation (Initial Phase)
+At this stage, the project includes:
+- Stack implementation using linked lists
+- Board initialization as a matrix of stacks
+- Basic push/pop operations
+- Simple graphical visualization using **raylib**
+- Rendering of the top value of each stack on the board
+
+⚠️ **Game rules, player turns, scoring system, and win conditions are not yet implemented.**
+
+---
+
+## 🗂 Project Structure
+├── main.c # Main program and graphical loop
+├── arquivo.h # Stack TAD definitions and prototypes
+├── arquivo.c # Stack TAD implementation
+└── README.md
+
+
+---
+
+## 🛠 Technologies & Libraries
+- **C (ANSI C)**
+- **raylib** (for graphical rendering)
+
+---
+
+## 👥 Team
+- Arthur Gomes  
+- Gilvan Peace  
+
+---
+
+## 📅 Next Steps
+Planned future developments include:
+- Implementation of official BUKU game rules
+- Player interaction and turn control
+- Stack movement logic
+- Dynamic board resizing
+- Improved graphical interface
+
+---
+
+## 📢 Notes
+This repository is intended **strictly for educational purposes**.  
+All development follows the academic integrity rules established by the instructor.
+
+If you have questions, feel free to contact the team members.
