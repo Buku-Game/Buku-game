@@ -1,0 +1,41 @@
+# Arquivos compilados
+*.o
+*.out
+*.exe
+buku
+a.out
+
+# Debug
+*.dSYM/
+*.su
+*.idb
+*.pdb
+vgcore.*
+
+# Arquivos temporários
+*~
+*.swp
+*.swo
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+
+# Valgrind
+valgrind-*.txt
+
+# Build
+build/
+dist/
+
+# Backup
+*.bak
+*.backup
+.nix
+.sh
+Makefile
