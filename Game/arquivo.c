@@ -69,6 +69,7 @@ void liberar_tabuleiro(Pilha t[tam][tam]) {
     }
 }
 
+
 // debug - mostra tabuleiro no terminal
 void imprimir_tabuleiro(Pilha t[tam][tam]) {
     printf("\n=== Tabuleiro ===\n");
