@@ -66,18 +66,24 @@ int main() {
                     if (my >= 0 && my < tam) {
                         linha_sel = my;
                         pecas_mao = coletar_linha(tabuleiro, linha_sel);
-
-                        // primeira jogada do branco ganha 1 peça extra
-                        if (turno_numero == 0) {
-                            pecas_mao++;
+                        //verificar se houve desistencia
+                        if(pecas_mao == 0){
+                            sprintf(msg, "Branco desistiu! Preto venceu!");
+                            estado = FIM_JOGO;
                         }
+                        else{
+                            // primeira jogada do branco ganha 1 peça extra
+                            if (turno_numero == 0) {
+                                pecas_mao++;
+                            }
 
-                        estado = SEMEANDO;
-                        ultima_i = -1;
-                        ultima_j = -1;
-                        memset(visitadas, false, sizeof(visitadas));
+                            estado = SEMEANDO;
+                            ultima_i = -1;
+                            ultima_j = -1;
+                            memset(visitadas, false, sizeof(visitadas));
 
-                        sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao);
+                            sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao);
+                        }
                     }
                 }
                 // turno do preto (selecianr a coluna)
@@ -85,13 +91,18 @@ int main() {
                     if (mx >= 0 && mx < tam) {
                         coluna_sel = mx;
                         pecas_mao = coletar_coluna(tabuleiro, coluna_sel);
+                        if(pecas_mao == 0){
+                            sprintf(msg, "Preto desistiu! Branco venceu!");
+                            estado = FIM_JOGO;
+                        }
+                        else{
 
-                        estado = SEMEANDO;
-                        ultima_i = -1;
-                        ultima_j = -1;
-                        memset(visitadas, false, sizeof(visitadas));
-
-                        sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao);
+                            estado = SEMEANDO;
+                            ultima_i = -1;
+                            ultima_j = -1;
+                            memset(visitadas, false, sizeof(visitadas));
+                            sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao);
+                        }
                     }
                 }
             }
