@@ -66,10 +66,13 @@ int main() {
                     if (my >= 0 && my < tam) {
                         linha_sel = my;
                         pecas_mao = coletar_linha(tabuleiro, linha_sel);
-                        //verificar se houve desistencia
-                        if(pecas_mao == 0){
-                            sprintf(msg, "Branco desistiu! Preto venceu!");
+                        //verificar se houve desistencia ou vitoria
+                        if(pecas_mao == 0 && pontos_branco <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
+                            sprintf(msg, "Branco Encerrou o jogo! O numero de pontos do branco é <= %d, assim, ele perdeu e o preto ganhou!", tam/2);
                             estado = FIM_JOGO;
+                        }
+                        else if(pecas_mao == 0 && pontos_branco > tam/2 ){
+                            sprintf(msg, "Branco encerrou o jogo! O numero de peças na mao do branco é > %d, logo, ele ganhou e o preto perdeu!", tam/2 );
                         }
                         else{
                             // primeira jogada do branco ganha 1 peça extra

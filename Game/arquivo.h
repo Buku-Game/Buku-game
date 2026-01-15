@@ -11,7 +11,7 @@ typedef struct No {
 typedef struct x {
     No *topo;
 } Pilha;
-
+//fucoes principais
 void iniciar(Pilha *p);
 int pilhavazia(Pilha *p);
 void push(Pilha *p, int valor);
