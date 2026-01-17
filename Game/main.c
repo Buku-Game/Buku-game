@@ -25,7 +25,7 @@ int main() {
     // coloca 1 peça em cada casa no começo
     for (int i = 0; i < tam; i++) {
         for (int j = 0; j < tam; j++) {
-            push(&tabuleiro[i][j], 1);
+            push(&tabuleiro[i][j], 0);
         }
     }
 
@@ -38,7 +38,13 @@ int main() {
 
     int linha_sel = -1;
     int coluna_sel = -1;
-    int pecas_mao = 0;
+    int pecas_mao_int = 0;
+    Pilha *mao;
+    iniciar(mao);
+
+
+    
+
 
     int ultima_i = -1;
     int ultima_j = -1;
@@ -65,19 +71,22 @@ int main() {
                 if (turno_branco) {
                     if (my >= 0 && my < tam) {
                         linha_sel = my;
-                        pecas_mao = coletar_linha(tabuleiro, linha_sel);
+                        pecas_mao_int = coletar_linha(tabuleiro, linha_sel);
+                        push_pecas(mao, pecas_mao_int);
+
                         //verificar se houve desistencia ou vitoria
-                        if(pecas_mao == 0 && pontos_branco <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
+                        if(mao->size == 0 && pontos_branco <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
                             sprintf(msg, "Branco Encerrou o jogo! O numero de pontos do branco é <= %d, assim, ele perdeu e o preto ganhou!", tam/2);
                             estado = FIM_JOGO;
                         }
-                        else if(pecas_mao == 0 && pontos_branco > tam/2 ){
+                        else if(mao->size == 0 && pontos_branco > tam/2 ){
                             sprintf(msg, "Branco encerrou o jogo! O numero de peças na mao do branco é > %d, logo, ele ganhou e o preto perdeu!", tam/2 );
+                            estado = FIM_JOGO;
                         }
                         else{
                             // primeira jogada do branco ganha 1 peça extra
                             if (turno_numero == 0) {
-                                pecas_mao++;
+                                push(mao, 0);
                             }
 
                             estado = SEMEANDO;
@@ -85,7 +94,7 @@ int main() {
                             ultima_j = -1;
                             memset(visitadas, false, sizeof(visitadas));
 
-                            sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao);
+                            sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao_int);
                         }
                     }
                 }
@@ -93,9 +102,15 @@ int main() {
                 else {
                     if (mx >= 0 && mx < tam) {
                         coluna_sel = mx;
-                        pecas_mao = coletar_coluna(tabuleiro, coluna_sel);
-                        if(pecas_mao == 0){
-                            sprintf(msg, "Preto desistiu! Branco venceu!");
+                        pecas_mao_int = coletar_coluna(tabuleiro, coluna_sel);
+                        push_pecas(mao, pecas_mao_int);
+
+                        if(mao->size == 0 && pontos_branco <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
+                            sprintf(msg, "Preto Encerrou o jogo! O numero de pontos do preto é <= %d, assim, ele perdeu e o branco ganhou!", tam/2);
+                            estado = FIM_JOGO;
+                        }
+                        else if(mao->size == 0 && pontos_branco > tam/2 ){
+                            sprintf(msg, "Preto encerrou o jogo! O numero de peças na mao do preto é > %d, logo, ele ganhou e o branco perdeu!", tam/2 );
                             estado = FIM_JOGO;
                         }
                         else{
@@ -104,7 +119,7 @@ int main() {
                             ultima_i = -1;
                             ultima_j = -1;
                             memset(visitadas, false, sizeof(visitadas));
-                            sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao);
+                            sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao_int);
                         }
                     }
                 }
@@ -112,7 +127,7 @@ int main() {
         }
         else if (estado == SEMEANDO) {
 
-            if (pecas_mao > 0 && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            if (pecas_mao_int > 0 && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 
                 if (mx >= 0 && mx < tam && my >= 0 && my < tam) {
 
@@ -139,11 +154,11 @@ int main() {
 
                         ultima_i = my;
                         ultima_j = mx;
-                        pecas_mao--;
+                        pecas_mao_int--;
 
-                        sprintf(msg, "%d pecas restantes", pecas_mao);
+                        sprintf(msg, "%d pecas restantes", pecas_mao_int);
 
-                        if (pecas_mao == 0) {
+                        if (pecas_mao_int == 0) {
                             int capturadas = realizar_captura(tabuleiro, turno_branco);
 
                             if (turno_branco)

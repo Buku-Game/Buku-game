@@ -4,6 +4,7 @@
 
 void iniciar (Pilha *p){
     p->topo = NULL;
+    p->size = 0;
 }
 
 int pilhavazia (Pilha *p){
@@ -15,6 +16,13 @@ void push(Pilha *p, int valor){
     novo->valor = valor;
     novo->prox = p->topo;
     p->topo = novo;
+    p->size++;
+}
+
+void push_pecas(Pilha *p, int numero_de_pecas){
+    for (int i = 0; i<numero_de_pecas; i++){
+        push(p, 0);
+    }
 }
 
 int pop(Pilha *p){
@@ -70,7 +78,8 @@ void liberar_tabuleiro(Pilha t[tam][tam]) {
 }
 
 
-// debug - mostra tabuleiro no terminal
+// func teste para printar o tabuleiro no terminal
+
 void imprimir_tabuleiro(Pilha t[tam][tam]) {
     printf("\n=== Tabuleiro ===\n");
     printf("   ");

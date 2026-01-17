@@ -8,9 +8,12 @@ typedef struct No {
     struct No *prox;
 } No;
 
-typedef struct x {
+typedef struct Nodiescritor {
     No *topo;
+    int size;
 } Pilha;
+
+
 //fucoes principais
 void iniciar(Pilha *p);
 int pilhavazia(Pilha *p);
@@ -31,5 +34,6 @@ int coletar_coluna(Pilha t[tam][tam], int coluna);
 int realizar_captura(Pilha t[tam][tam], bool turno_branco);
 bool verificar_fim_jogo(Pilha t[tam][tam]);
 void contar_pecas_restantes(Pilha t[tam][tam], int *branco, int *preto);
+void push_pecas(Pilha *p, int i);
 
 #endif
