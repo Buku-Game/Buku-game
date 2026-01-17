@@ -32,9 +32,13 @@ int main() {
     Estado estado = SELECIONANDO;
 
     bool turno_branco = true;
-    int pontos_branco = 0;
-    int pontos_preto = 0;
     int turno_numero = 0;
+
+    Pilha *pontos_preto_pilha;
+    iniciar(pontos_preto_pilha);
+
+    Pilha *pontos_branco_pilha;
+    iniciar(pontos_branco_pilha);
 
     int linha_sel = -1;
     int coluna_sel = -1;
@@ -75,11 +79,11 @@ int main() {
                         push_pecas(mao, pecas_mao_int);
 
                         //verificar se houve desistencia ou vitoria
-                        if(mao->size == 0 && pontos_branco <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
+                        if(mao->size == 0 && pontos_branco_pilha->size <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
                             sprintf(msg, "Branco Encerrou o jogo! O numero de pontos do branco é <= %d, assim, ele perdeu e o preto ganhou!", tam/2);
                             estado = FIM_JOGO;
                         }
-                        else if(mao->size == 0 && pontos_branco > tam/2 ){
+                        else if(mao->size == 0 && pontos_branco_pilha->size > tam/2 ){
                             sprintf(msg, "Branco encerrou o jogo! O numero de peças na mao do branco é > %d, logo, ele ganhou e o preto perdeu!", tam/2 );
                             estado = FIM_JOGO;
                         }
@@ -105,11 +109,11 @@ int main() {
                         pecas_mao_int = coletar_coluna(tabuleiro, coluna_sel);
                         push_pecas(mao, pecas_mao_int);
 
-                        if(mao->size == 0 && pontos_branco <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
+                        if(mao->size == 0 && pontos_branco_pilha->size <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
                             sprintf(msg, "Preto Encerrou o jogo! O numero de pontos do preto é <= %d, assim, ele perdeu e o branco ganhou!", tam/2);
                             estado = FIM_JOGO;
                         }
-                        else if(mao->size == 0 && pontos_branco > tam/2 ){
+                        else if(mao->size == 0 && pontos_branco_pilha->size > tam/2 ){
                             sprintf(msg, "Preto encerrou o jogo! O numero de peças na mao do preto é > %d, logo, ele ganhou e o branco perdeu!", tam/2 );
                             estado = FIM_JOGO;
                         }
@@ -154,17 +158,17 @@ int main() {
 
                         ultima_i = my;
                         ultima_j = mx;
-                        pecas_mao_int--;
+                        mao->size--;
 
-                        sprintf(msg, "%d pecas restantes", pecas_mao_int);
+                        sprintf(msg, "%d pecas restantes", mao->size);
 
-                        if (pecas_mao_int == 0) {
+                        if (mao->size == 0) {
                             int capturadas = realizar_captura(tabuleiro, turno_branco);
 
                             if (turno_branco)
-                                pontos_branco += capturadas;
+                                push_pecas(pontos_branco_pilha, capturadas);
                             else
-                                pontos_preto += capturadas;
+                                push_pecas(pontos_preto_pilha, capturadas);
 
                             // verificae se teve um fim de jogo
 
@@ -173,17 +177,17 @@ int main() {
                                 int rb, rp;
                                 contar_pecas_restantes(tabuleiro, &rb, &rp);
 
-                                pontos_branco += rb;
-                                pontos_preto += rp;
+                                push_pecas(pontos_branco_pilha, rb);
+                                push_pecas(pontos_preto_pilha, rp);
 
                                 estado = FIM_JOGO;
 
-                                if (pontos_branco > pontos_preto) {
-                                    sprintf(msg, "BRANCO VENCEU! %d x %d", pontos_branco, pontos_preto);
-                                } else if (pontos_preto > pontos_branco) {
-                                    sprintf(msg, "PRETO VENCEU! %d x %d", pontos_preto, pontos_branco);
+                                if (pontos_branco_pilha->size > pontos_preto_pilha->size) {
+                                    sprintf(msg, "BRANCO VENCEU! %d x %d", pontos_branco_pilha->size, pontos_preto_pilha->size);
+                                } else if (pontos_preto_pilha->size > pontos_branco_pilha->size) {
+                                    sprintf(msg, "PRETO VENCEU! %d x %d", pontos_preto_pilha->size, pontos_branco_pilha->size);
                                 } else {
-                                    sprintf(msg, "EMPATE! %d x %d", pontos_branco, pontos_preto);
+                                    sprintf(msg, "EMPATE! %d x %d", pontos_branco_pilha->size, pontos_preto_pilha->size);
                                 }
                             } else {
                                 turno_branco = !turno_branco;
@@ -213,7 +217,7 @@ int main() {
         );
 
         DrawText(
-            TextFormat("Pontos - Branco: %d | Preto: %d", pontos_branco, pontos_preto),
+            TextFormat("Pontos - Branco: %d | Preto: %d", pontos_branco_pilha->size, pontos_preto_pilha->size),
             10, 80, 20, DARKGRAY
         );
 
