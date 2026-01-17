@@ -8,7 +8,13 @@
 #define OFFSET_X 50
 #define OFFSET_Y 150
 
+// Receber a variavel Num para definir o tamnho do tabuleiro !!! FEITO
+// Corrijir as chamadas das funções (passar a variavel "tam_input" nas chamadas)
+//Adicionar a tela de inicio para adicionar o tamanho do tabuleiro 
+// Verificar se precisa mudar os valores do RAYLIB 
+
 typedef enum {
+    TELA_INICIAL,
     SELECIONANDO,
     SEMEANDO,
     FIM_JOGO
@@ -16,50 +22,87 @@ typedef enum {
 
 int main() {
     // janela meio grande pra caber tudo
+
     InitWindow(800, 900, "BUKU GAME");
     SetTargetFPS(60);
+    Estado estado = TELA_INICIAL;
+    char inputTam[4] = "";
+    int inputLen = 0;
+    int tam_input = 0;
 
-    Pilha tabuleiro[tam][tam];
-    iniciartabuleiro(tabuleiro);
 
-    // coloca 1 peça em cada casa no começo
-    for (int i = 0; i < tam; i++) {
-        for (int j = 0; j < tam; j++) {
-            push(&tabuleiro[i][j], 0);
-        }
-    }
-
-    Estado estado = SELECIONANDO;
+    Pilha **tabuleiro = NULL;   
 
     bool turno_branco = true;
     int turno_numero = 0;
 
-    Pilha *pontos_preto_pilha;
+    Pilha *pontos_preto_pilha = malloc(sizeof(Pilha));
     iniciar(pontos_preto_pilha);
 
-    Pilha *pontos_branco_pilha;
+    Pilha *pontos_branco_pilha = malloc(sizeof(Pilha));
     iniciar(pontos_branco_pilha);
 
     int linha_sel = -1;
     int coluna_sel = -1;
     int pecas_mao_int = 0;
-    Pilha *mao;
+    Pilha *mao = malloc(sizeof(Pilha)); 
     iniciar(mao);
-
-
-    
-
+    bool **visitadas = NULL;
 
     int ultima_i = -1;
     int ultima_j = -1;
-
-    bool visitadas[tam][tam];
-    memset(visitadas, false, sizeof(visitadas));
-
     char msg[100];
     strcpy(msg, "Selecione uma linha (Branco) ou coluna (Preto)");
 
     while (!WindowShouldClose()) {
+        if (estado == TELA_INICIAL){
+            BeginDrawing();
+            ClearBackground(RAYWHITE);
+            DrawText("Digite o tamanho do tabuleiro", 200, 300, 30, BLACK);
+            DrawRectangle(300, 350, 200, 40, LIGHTGRAY);
+            DrawRectangleLines(300, 350, 200, 40, BLACK);
+            DrawText(inputTam, 310, 355, 30, BLACK);
+            int key = GetCharPressed();
+            while(key > 0){
+                if (key >= '0' && key <= '9' && inputLen < 3 ){
+                    inputTam[inputLen++] = (char)key;
+                    inputTam[inputLen] = '\0';
+                }
+                key = GetCharPressed();
+            }
+            if(IsKeyPressed(KEY_BACKSPACE) && inputLen >0){
+                inputLen--;
+                inputTam[inputLen] = '\0';
+            }
+            if (IsKeyPressed(KEY_ENTER) && inputLen > 0){
+                tam_input = atoi(inputTam);
+                if(tam_input > 0){
+                    iniciartabuleiro(&tabuleiro, tam_input);
+                    for (int i = 0; i<tam_input ; i++){
+                        for(int j = 0 ; j<tam_input; j++){
+                            iniciar(&tabuleiro[i][j]);
+                            push(&tabuleiro[i][j], 0);
+                        }
+                    }
+                    visitadas = malloc(tam_input*(sizeof(bool*)));
+                    for (int i =0; i<tam_input; i++){
+                        visitadas[i] = malloc(tam_input*(sizeof(bool)));
+                        for (int j = 0 ; j<tam_input; j++){
+                            visitadas[i][j] = false;
+                    }
+                }
+                estado = SELECIONANDO;
+                }
+            }
+            
+            EndDrawing();
+            continue;
+        }
+        for (int i = 0; i < tam_input; i++){
+            for (int j = 0; j < tam_input; j++){
+                visitadas[i][j] = false;
+            }
+        }
 
         // posição do mouse convertida pra célula
         Vector2 mouse = GetMousePosition();
@@ -73,18 +116,18 @@ int main() {
 
                 // turno do branco (escolhe a linha)
                 if (turno_branco) {
-                    if (my >= 0 && my < tam) {
+                    if (my >= 0 && my < tam_input) {
                         linha_sel = my;
-                        pecas_mao_int = coletar_linha(tabuleiro, linha_sel);
+                        pecas_mao_int = coletar_linha(tabuleiro, linha_sel, tam_input);
                         push_pecas(mao, pecas_mao_int);
 
                         //verificar se houve desistencia ou vitoria
-                        if(mao->size == 0 && pontos_branco_pilha->size <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
-                            sprintf(msg, "Branco Encerrou o jogo! O numero de pontos do branco é <= %d, assim, ele perdeu e o preto ganhou!", tam/2);
+                        if(mao->size == 0 && pontos_branco_pilha->size <= tam_input/2  ){ //verificar depois se ta correto esse tam_input/2 (se realmente é oq precisa pra vencer ou nao)
+                            sprintf(msg, "Branco Encerrou o jogo! O numero de pontos do branco é <= %d, assim, ele perdeu e o preto ganhou!", tam_input/2);
                             estado = FIM_JOGO;
                         }
-                        else if(mao->size == 0 && pontos_branco_pilha->size > tam/2 ){
-                            sprintf(msg, "Branco encerrou o jogo! O numero de peças na mao do branco é > %d, logo, ele ganhou e o preto perdeu!", tam/2 );
+                        else if(mao->size == 0 && pontos_branco_pilha->size > tam_input/2 ){
+                            sprintf(msg, "Branco encerrou o jogo! O numero de peças na mao do branco é > %d, logo, ele ganhou e o preto perdeu!", tam_input/2 );
                             estado = FIM_JOGO;
                         }
                         else{
@@ -96,7 +139,11 @@ int main() {
                             estado = SEMEANDO;
                             ultima_i = -1;
                             ultima_j = -1;
-                            memset(visitadas, false, sizeof(visitadas));
+                            for (int i = 0; i < tam_input; i++){
+                                for (int j = 0; j < tam_input; j++){
+                                    visitadas[i][j] = false;
+                                }
+                            }
 
                             sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao_int);
                         }
@@ -104,17 +151,17 @@ int main() {
                 }
                 // turno do preto (selecianr a coluna)
                 else {
-                    if (mx >= 0 && mx < tam) {
+                    if (mx >= 0 && mx < tam_input) {
                         coluna_sel = mx;
-                        pecas_mao_int = coletar_coluna(tabuleiro, coluna_sel);
+                        pecas_mao_int = coletar_coluna(tabuleiro, coluna_sel, tam_input);
                         push_pecas(mao, pecas_mao_int);
 
-                        if(mao->size == 0 && pontos_branco_pilha->size <= tam/2  ){ //verificar depois se ta correto esse tam/2 (se realmente é oq precisa pra vencer ou nao)
-                            sprintf(msg, "Preto Encerrou o jogo! O numero de pontos do preto é <= %d, assim, ele perdeu e o branco ganhou!", tam/2);
+                        if(mao->size == 0 && pontos_branco_pilha->size <= tam_input/2  ){ //verificar depois se ta correto esse tam_input/2 (se realmente é oq precisa pra vencer ou nao)
+                            sprintf(msg, "Preto Encerrou o jogo! O numero de pontos do preto é <= %d, assim, ele perdeu e o branco ganhou!", tam_input/2);
                             estado = FIM_JOGO;
                         }
-                        else if(mao->size == 0 && pontos_branco_pilha->size > tam/2 ){
-                            sprintf(msg, "Preto encerrou o jogo! O numero de peças na mao do preto é > %d, logo, ele ganhou e o branco perdeu!", tam/2 );
+                        else if(mao->size == 0 && pontos_branco_pilha->size > tam_input/2 ){
+                            sprintf(msg, "Preto encerrou o jogo! O numero de peças na mao do preto é > %d, logo, ele ganhou e o branco perdeu!", tam_input/2 );
                             estado = FIM_JOGO;
                         }
                         else{
@@ -122,7 +169,11 @@ int main() {
                             estado = SEMEANDO;
                             ultima_i = -1;
                             ultima_j = -1;
-                            memset(visitadas, false, sizeof(visitadas));
+                            for (int i = 0; i < tam_input; i++){
+                                for (int j = 0; j < tam_input; j++){
+                                    visitadas[i][j] = false;
+                                }
+                            }
                             sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao_int);
                         }
                     }
@@ -133,7 +184,7 @@ int main() {
 
             if (pecas_mao_int > 0 && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
 
-                if (mx >= 0 && mx < tam && my >= 0 && my < tam) {
+                if (mx >= 0 && mx < tam_input && my >= 0 && my < tam_input) {
 
                     bool pode = false;
 
@@ -163,7 +214,7 @@ int main() {
                         sprintf(msg, "%d pecas restantes", mao->size);
 
                         if (mao->size == 0) {
-                            int capturadas = realizar_captura(tabuleiro, turno_branco);
+                            int capturadas = realizar_captura(tabuleiro, turno_branco, tam_input);
 
                             if (turno_branco)
                                 push_pecas(pontos_branco_pilha, capturadas);
@@ -172,10 +223,10 @@ int main() {
 
                             // verificae se teve um fim de jogo
 
-                            if (verificar_fim_jogo(tabuleiro)) {
+                            if (verificar_fim_jogo(tabuleiro, tam_input)) {
 
                                 int rb, rp;
-                                contar_pecas_restantes(tabuleiro, &rb, &rp);
+                                contar_pecas_restantes(tabuleiro, &rb, &rp, tam_input);
 
                                 push_pecas(pontos_branco_pilha, rb);
                                 push_pecas(pontos_preto_pilha, rp);
@@ -225,14 +276,14 @@ int main() {
 
         // destaque de linha ou coluna
         if (estado == SELECIONANDO) {
-            if (turno_branco && my >= 0 && my < tam) {
-                for (int j = 0; j < tam; j++) {
+            if (turno_branco && my >= 0 && my < tam_input) {
+                for (int j = 0; j < tam_input; j++) {
                     DrawRectangle(j * CEL + OFFSET_X, my * CEL + OFFSET_Y, CEL, CEL,
                                   ColorAlpha(YELLOW, 0.3f));
                 }
             }
-            if (!turno_branco && mx >= 0 && mx < tam) {
-                for (int i = 0; i < tam; i++) {
+            if (!turno_branco && mx >= 0 && mx < tam_input) {
+                for (int i = 0; i < tam_input; i++) {
                     DrawRectangle(mx * CEL + OFFSET_X, i * CEL + OFFSET_Y, CEL, CEL,
                                   ColorAlpha(YELLOW, 0.3f));
                 }
@@ -240,8 +291,8 @@ int main() {
         }
 
         // tabuleiro
-        for (int i = 0; i < tam; i++) {
-            for (int j = 0; j < tam; j++) {
+        for (int i = 0; i < tam_input; i++) {
+            for (int j = 0; j < tam_input; j++) {
 
                 int x = j * CEL + OFFSET_X;
                 int y = i * CEL + OFFSET_Y;
@@ -275,8 +326,16 @@ int main() {
 
         EndDrawing();
     }
+    for (int i = 0; i < tam_input; i++){
+        free(visitadas[i]);
+    }
+    free(visitadas);
 
-    liberar_tabuleiro(tabuleiro);
+    liberar_tabuleiro(tabuleiro, tam_input); 
+    free(mao);
+    free(pontos_branco_pilha);
+    free(pontos_preto_pilha);
     CloseWindow();
+    
     return 0;
 }

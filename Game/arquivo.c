@@ -33,29 +33,26 @@ int pop(Pilha *p){
     int i = aux->valor;
     p->topo = aux->prox;
     free(aux);
+    p->size--;
     return i;
 }
 
-void iniciartabuleiro(Pilha t[tam][tam]){
-    for (int i =0; i<tam ; i++){
-        for(int j = 0; j<tam ; j++){
-            iniciar(&t[i][j]);
-        }
+void iniciartabuleiro(Pilha ***t, int n) {
+    *t = malloc(n * sizeof(Pilha*));
+
+    for (int i = 0; i < n; i++) {
+        (*t)[i] = malloc(n * sizeof(Pilha));
     }
 }
+
+
 
 // conta pecas na pilha
 int contar_pecas(Pilha *p) {
     if (pilhavazia(p)) {
         return 0;
     }
-    int count = 0;
-    No *atual = p->topo;
-    while (atual != NULL) {
-        count++;
-        atual = atual->prox;
-    }
-    return count;
+    return p->size;
 }
 
 // verifica se casa eh branca (tipo xadrez)
@@ -69,18 +66,21 @@ void liberar_pilha(Pilha *p) {
     }
 }
 
-void liberar_tabuleiro(Pilha t[tam][tam]) {
+void liberar_tabuleiro(Pilha **t, int tam) {
     for (int i = 0; i < tam; i++) {
         for (int j = 0; j < tam; j++) {
             liberar_pilha(&t[i][j]);
         }
+        free(t[i]);
     }
+    free(t);
 }
+
 
 
 // func teste para printar o tabuleiro no terminal
 
-void imprimir_tabuleiro(Pilha t[tam][tam]) {
+void imprimir_tabuleiro(Pilha **t, int tam) {
     printf("\n=== Tabuleiro ===\n");
     printf("   ");
     for (int j = 0; j < tam; j++) {
@@ -103,7 +103,7 @@ void imprimir_tabuleiro(Pilha t[tam][tam]) {
     printf("=================\n");
 }
 
-int coletar_linha(Pilha t[tam][tam], int linha) {
+int coletar_linha(Pilha **t, int linha, int tam) {
     int total = 0;
     for (int j = 0; j < tam; j++) {
         while (!pilhavazia(&t[linha][j])) {
@@ -114,7 +114,7 @@ int coletar_linha(Pilha t[tam][tam], int linha) {
     return total;
 }
 
-int coletar_coluna(Pilha t[tam][tam], int coluna) {
+int coletar_coluna(Pilha **t, int coluna, int tam) {
     int total = 0;
     for (int i = 0; i < tam; i++) {
         while (!pilhavazia(&t[i][coluna])) {
@@ -125,7 +125,7 @@ int coletar_coluna(Pilha t[tam][tam], int coluna) {
     return total;
 }
 
-int realizar_captura(Pilha t[tam][tam], bool turno_branco) {
+int realizar_captura(Pilha **t, bool turno_branco, int tam) {
     int total_cap = 0;
     
     for (int i = 0; i < tam; i++) {
@@ -147,7 +147,7 @@ int realizar_captura(Pilha t[tam][tam], bool turno_branco) {
     return total_cap;
 }
 
-bool verificar_fim_jogo(Pilha t[tam][tam]) {
+bool verificar_fim_jogo(Pilha **t, int tam) {
     // jogo acaba quando todas casas tem no max 1 peça
     for (int i = 0; i < tam; i++) {
         for (int j = 0; j < tam; j++) {
@@ -160,7 +160,7 @@ bool verificar_fim_jogo(Pilha t[tam][tam]) {
     return true;
 }
 
-void contar_pecas_restantes(Pilha t[tam][tam], int *branco, int *preto) {
+void contar_pecas_restantes(Pilha **t, int *branco, int *preto, int tam) {
     *branco = 0;
     *preto = 0;
     
