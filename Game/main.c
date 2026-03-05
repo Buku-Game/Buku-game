@@ -8,7 +8,7 @@
 #define OFFSET_X 50
 #define OFFSET_Y 150
 
-// Receber a variavel Num para definir o tamnho do tabuleiro !!! FEITO
+// Receber a variavel input_Num para definir o tamnho do tabuleiro !!! FEITO
 // Corrijir as chamadas das funções (passar a variavel "tam_input" nas chamadas)
 //Adicionar a tela de inicio para adicionar o tamanho do tabuleiro 
 // Verificar se precisa mudar os valores do RAYLIB 
@@ -58,14 +58,15 @@ int main() {
         if (estado == TELA_INICIAL){
             BeginDrawing();
             ClearBackground(RAYWHITE);
-            DrawText("Digite o tamanho do tabuleiro", 200, 300, 30, BLACK);
+            DrawText("Digite o tamanho do tabuleiro NxN ", 200, 300, 30, BLACK);
             DrawRectangle(300, 350, 200, 40, LIGHTGRAY);
             DrawRectangleLines(300, 350, 200, 40, BLACK);
             DrawText(inputTam, 310, 355, 30, BLACK);
             int key = GetCharPressed();
             while(key > 0){
                 if (key >= '0' && key <= '9' && inputLen < 3 ){
-                    inputTam[inputLen++] = (char)key;
+                    inputTam[inputLen] = key;
+                    inputLen++;
                     inputTam[inputLen] = '\0';
                 }
                 key = GetCharPressed();
@@ -76,7 +77,11 @@ int main() {
             }
             if (IsKeyPressed(KEY_ENTER) && inputLen > 0){
                 tam_input = atoi(inputTam);
-                if(tam_input > 0){
+                if(tam_input % 2 !=0){
+                    inputLen = 0;
+                    inputTam[0] = '\0';
+                }
+                else if(tam_input > 0){
                     iniciartabuleiro(&tabuleiro, tam_input);
                     for (int i = 0; i<tam_input ; i++){
                         for(int j = 0 ; j<tam_input; j++){
