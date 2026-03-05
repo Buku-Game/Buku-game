@@ -58,11 +58,12 @@ int main() {
         if (estado == TELA_INICIAL){
             BeginDrawing();
             ClearBackground(RAYWHITE);
-            DrawText("Digite o tamanho do tabuleiro NxN ", 200, 300, 30, BLACK);
+            DrawText("Digite o tamanho do tabuleiro NxN", 200, 300, 30, BLACK);
             DrawRectangle(300, 350, 200, 40, LIGHTGRAY);
             DrawRectangleLines(300, 350, 200, 40, BLACK);
             DrawText(inputTam, 310, 355, 30, BLACK);
             int key = GetCharPressed();
+            DrawText("N deve ser par!", 280, 400, 30, BLACK);
             while(key > 0){
                 if (key >= '0' && key <= '9' && inputLen < 3 ){
                     inputTam[inputLen] = key;
