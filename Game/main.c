@@ -98,7 +98,6 @@ int main() {
             EndDrawing();
             continue;
         }
-        limpar_visitadas(visitadas, tam_input);
 
         // posição do mouse convertida pra célula
         Vector2 mouse = GetMousePosition();
@@ -177,21 +176,20 @@ int main() {
                     bool pode = false;
 
                     // movimento livcre da primeira peca
-                    
+                        
 
-                    if (ultima_i == -1) {
-                        if (!visitadas[my][mx]) {
-                            pode = true;
-                        }
-                    } 
+                    if (visitadas[my][mx]) {
+                        pode = false;
+                    }
+                    else if (ultima_i == -1) {
+                        pode = true;
+                    }
                     else {
                         int dx = abs(mx - ultima_j);
                         int dy = abs(my - ultima_i);
 
                         if ((dx == 1 && dy == 0) || (dx == 0 && dy == 1)) {
-                            if (!visitadas[my][mx]) {
-                                pode = true;
-                            }
+                            pode = true;
                         }
                     }
 
