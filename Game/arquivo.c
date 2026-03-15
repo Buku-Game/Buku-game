@@ -182,3 +182,14 @@ void limpar_visitadas(bool **v, int tam){
         }
     }
 }
+
+bool **matriz_visitadas(int tam){
+    bool **v = malloc(tam*sizeof(bool*));
+    for (int i = 0 ; i<tam; i++){
+        v[i] = malloc(tam*sizeof(bool));
+        for (int j = 0; j<tam; j++){
+            v[i][j] = false;
+        }
+    }
+    return v;
+}
