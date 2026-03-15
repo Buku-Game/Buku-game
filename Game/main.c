@@ -314,11 +314,7 @@ int main() {
 
         EndDrawing();
     }
-    for (int i = 0; i < tam_input; i++){
-        free(visitadas[i]);
-    }
-    free(visitadas);
-
+    liberar_visitadas(visitadas, tam_input);
     liberar_tabuleiro(tabuleiro, tam_input); 
     free(mao);
     free(pontos_branco_pilha);

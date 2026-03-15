@@ -193,3 +193,10 @@ bool **matriz_visitadas(int tam){
     }
     return v;
 }
+
+void liberar_visitadas(bool **v, int tam){
+    for(int i = 0 ; i<tam; i++){
+        free(v[i]);
+    }
+    free(v);
+}

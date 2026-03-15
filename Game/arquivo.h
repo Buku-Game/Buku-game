@@ -29,6 +29,7 @@ void liberar_tabuleiro(Pilha **t, int tam);
 void imprimir_tabuleiro(Pilha **t, int tam);
 void limpar_visitadas(bool **v, int tam);
 bool **criar_matriz_visitadas(int tam);
+void liberar_visitadas(bool **v, int tam);
 
 // funcoes do jogo
 int coletar_linha(Pilha **t, int linha, int tam);
