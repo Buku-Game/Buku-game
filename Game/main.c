@@ -197,7 +197,7 @@ int main() {
 
                         ultima_i = my;
                         ultima_j = mx;
-                        mao->size--;
+                        pop(mao);
 
                         sprintf(msg, "%d pecas restantes", mao->size);
 
