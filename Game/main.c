@@ -104,11 +104,7 @@ int main() {
             EndDrawing();
             continue;
         }
-        for (int i = 0; i < tam_input; i++){
-            for (int j = 0; j < tam_input; j++){
-                visitadas[i][j] = false;
-            }
-        }
+        limpar_visitadas(visitadas, tam_input);
 
         // posição do mouse convertida pra célula
         Vector2 mouse = GetMousePosition();
@@ -145,11 +141,7 @@ int main() {
                             estado = SEMEANDO;
                             ultima_i = -1;
                             ultima_j = -1;
-                            for (int i = 0; i < tam_input; i++){
-                                for (int j = 0; j < tam_input; j++){
-                                    visitadas[i][j] = false;
-                                }
-                            }
+                            limpar_visitadas(visitadas, tam_input);
 
                             sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao_int);
                         }
@@ -175,11 +167,7 @@ int main() {
                             estado = SEMEANDO;
                             ultima_i = -1;
                             ultima_j = -1;
-                            for (int i = 0; i < tam_input; i++){
-                                for (int j = 0; j < tam_input; j++){
-                                    visitadas[i][j] = false;
-                                }
-                            }
+                            limpar_visitadas(visitadas, tam_input);
                             sprintf(msg, "Coletou %d pecas. Clique para semear", pecas_mao_int);
                         }
                     }

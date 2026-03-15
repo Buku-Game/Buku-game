@@ -175,3 +175,10 @@ void contar_pecas_restantes(Pilha **t, int *branco, int *preto, int tam) {
         }
     }
 }
+void limpar_visitadas(bool **v, int tam){
+    for (int i = 0 ; i< tam; i++){
+        for (int j = 0; j<tam; j++){
+            v[i][j] = false;
+        }
+    }
+}

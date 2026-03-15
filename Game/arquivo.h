@@ -27,6 +27,7 @@ bool eh_casa_branca(int linha, int coluna);
 void liberar_pilha(Pilha *p);
 void liberar_tabuleiro(Pilha **t, int tam);
 void imprimir_tabuleiro(Pilha **t, int tam);
+void limpar_visitadas(bool **v, int tam);
 
 // funcoes do jogo
 int coletar_linha(Pilha **t, int linha, int tam);
