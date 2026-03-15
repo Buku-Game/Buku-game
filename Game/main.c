@@ -90,13 +90,7 @@ int main() {
                             push(&tabuleiro[i][j], 0);
                         }
                     }
-                    visitadas = malloc(tam_input*(sizeof(bool*)));
-                    for (int i =0; i<tam_input; i++){
-                        visitadas[i] = malloc(tam_input*(sizeof(bool)));
-                        for (int j = 0 ; j<tam_input; j++){
-                            visitadas[i][j] = false;
-                    }
-                }
+                visitadas = criar_matriz_visitadas(tam_input);
                 estado = SELECIONANDO;
                 }
             }
