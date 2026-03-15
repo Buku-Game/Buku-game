@@ -90,7 +90,7 @@ int main() {
                             push(&tabuleiro[i][j], 0);
                         }
                     }
-                visitadas = criar_matriz_visitadas(tam_input);
+                visitadas = matriz_visitadas(tam_input);
                 estado = SELECIONANDO;
                 }
             }
