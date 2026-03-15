@@ -177,10 +177,14 @@ int main() {
                     bool pode = false;
 
                     // movimento livcre da primeira peca
+                    
 
                     if (ultima_i == -1) {
-                        pode = true;
-                    } else {
+                        if (!visitadas[my][mx]) {
+                            pode = true;
+                        }
+                    } 
+                    else {
                         int dx = abs(mx - ultima_j);
                         int dy = abs(my - ultima_i);
 
