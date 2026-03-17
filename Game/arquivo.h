@@ -30,6 +30,8 @@ void imprimir_tabuleiro(Pilha **t, int tam);
 void limpar_visitadas(bool **v, int tam);
 bool **matriz_visitadas(int tam);
 void liberar_visitadas(bool **v, int tam);
+void devolve_mao (Pilha **tabuleiro, bool **visitadas, Pilha *mao, int tam);
+
 
 // funcoes do jogo
 int coletar_linha(Pilha **t, int linha, int tam);

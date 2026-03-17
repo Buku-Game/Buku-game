@@ -200,3 +200,15 @@ void liberar_visitadas(bool **v, int tam){
     }
     free(v);
 }
+
+void devolve_mao(Pilha **tabuleiro, bool **visitadas, Pilha *mao, int tam){
+    for(int i = 0 ; i<tam ; i++){
+        for (int j=0 ; j<tam ; j++){
+            if(visitadas[i][j]){
+                pop(&tabuleiro[i][j]);
+                push(mao, 1);
+                visitadas[i][j] = false; 
+            }
+        }
+    }
+}
