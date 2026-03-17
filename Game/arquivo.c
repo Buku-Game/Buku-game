@@ -206,7 +206,7 @@ void devolve_mao(Pilha **tabuleiro, bool **visitadas, Pilha *mao, int tam){
         for (int j=0 ; j<tam ; j++){
             if(visitadas[i][j]){
                 pop(&tabuleiro[i][j]);
-                push(mao, 1);
+                push(mao, 0);
                 visitadas[i][j] = false; 
             }
         }

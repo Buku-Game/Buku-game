@@ -175,9 +175,6 @@ int main() {
 
                     bool pode = false;
 
-                    // movimento livcre da primeira peca
-                        
-
                     if (visitadas[my][mx]) {
                         pode = false;
                     }
@@ -194,35 +191,47 @@ int main() {
                     }
 
                     if (pode) {
+
                         push(&tabuleiro[my][mx], 1);
                         visitadas[my][mx] = true;
 
                         ultima_i = my;
                         ultima_j = mx;
                         pop(mao);
+                        bool todos_vizinhos_ocupados = true;
 
+                        if ((mx + 1 < tam_input && !visitadas[my][mx + 1]) || (mx - 1 >= 0 && !visitadas[my][mx - 1]) || (my + 1 < tam_input && !visitadas[my + 1][mx]) || (my - 1 >= 0 && !visitadas[my - 1][mx])) {
+                            todos_vizinhos_ocupados = false;
+                        }
+                        if (todos_vizinhos_ocupados && mao->size >0) {
+                            devolve_mao(tabuleiro, visitadas, mao, tam_input);
+                            ultima_i = -1;
+                            ultima_j = -1;
+                            sprintf(msg, "Jogada cancelada! Continue jogando");
+                            continue;
+                        }
                         sprintf(msg, "%d pecas restantes", mao->size);
-
+                        
                         if (mao->size == 0) {
                             int capturadas = realizar_captura(tabuleiro, turno_branco, tam_input);
-
+                            
                             if (turno_branco)
-                                push_pecas(pontos_branco_pilha, capturadas);
+                            push_pecas(pontos_branco_pilha, capturadas);
                             else
-                                push_pecas(pontos_preto_pilha, capturadas);
-
+                            push_pecas(pontos_preto_pilha, capturadas);
+                            
                             // verificae se teve um fim de jogo
-
+                            
                             if (verificar_fim_jogo(tabuleiro, tam_input)) {
-
+                                
                                 int rb, rp;
                                 contar_pecas_restantes(tabuleiro, &rb, &rp, tam_input);
-
+                                
                                 push_pecas(pontos_branco_pilha, rb);
                                 push_pecas(pontos_preto_pilha, rp);
-
+                                
                                 estado = FIM_JOGO;
-
+                                
                                 if (pontos_branco_pilha->size > pontos_preto_pilha->size) {
                                     sprintf(msg, "BRANCO VENCEU! %d x %d", pontos_branco_pilha->size, pontos_preto_pilha->size);
                                 } else if (pontos_preto_pilha->size > pontos_branco_pilha->size) {
@@ -230,6 +239,11 @@ int main() {
                                 } else {
                                     sprintf(msg, "EMPATE! %d x %d", pontos_branco_pilha->size, pontos_preto_pilha->size);
                                 }
+                                
+                                
+                                
+                                
+                                
                             } else {
                                 turno_branco = !turno_branco;
                                 turno_numero++;
