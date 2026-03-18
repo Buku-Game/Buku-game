@@ -160,6 +160,8 @@ bool verificar_fim_jogo(Pilha **t, int tam) {
     return true;
 }
 
+
+
 void contar_pecas_restantes(Pilha **t, int *branco, int *preto, int tam) {
     *branco = 0;
     *preto = 0;

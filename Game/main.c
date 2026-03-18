@@ -51,6 +51,8 @@ int main() {
 
     int ultima_i = -1;
     int ultima_j = -1;
+    int ant_i = -1;
+    int ant_j = -1;
     char msg[100];
     strcpy(msg, "Selecione uma linha (Branco) ou coluna (Preto)");
 
@@ -193,25 +195,36 @@ int main() {
                     if (pode) {
 
                         push(&tabuleiro[my][mx], 1);
+                        
                         visitadas[my][mx] = true;
-
                         ultima_i = my;
                         ultima_j = mx;
+                        ant_i = my;
+                        ant_j = mx;
+                        
                         pop(mao);
                         bool todos_vizinhos_ocupados = true;
-
+                        //x = coluna
+                        //y = linhas
                         if ((mx + 1 < tam_input && !visitadas[my][mx + 1]) || (mx - 1 >= 0 && !visitadas[my][mx - 1]) || (my + 1 < tam_input && !visitadas[my + 1][mx]) || (my - 1 >= 0 && !visitadas[my - 1][mx])) {
                             todos_vizinhos_ocupados = false;
+                            //verificar se (linha - 1 nao possui jogadas livres, l-1 se torna true, se a jogada for invalida, volta
+                            // as peças pra mao)
                         }
-                        if (todos_vizinhos_ocupados && mao->size >0) {
+                        if(visitadas)
+                        sprintf(msg, "%d pecas restantes", mao->size);
+                        
+                        if (todos_vizinhos_ocupados && mao->size >0  ) {
                             devolve_mao(tabuleiro, visitadas, mao, tam_input);
                             ultima_i = -1;
                             ultima_j = -1;
                             sprintf(msg, "Jogada cancelada! Continue jogando");
+                            visitadas[my][mx + 1] = false;
+                            visitadas[my][mx - 1] = false;
+                            visitadas[my + 1][mx] = false;
+                            visitadas[my - 1][mx] = false;
                             continue;
                         }
-                        sprintf(msg, "%d pecas restantes", mao->size);
-                        
                         if (mao->size == 0) {
                             int capturadas = realizar_captura(tabuleiro, turno_branco, tam_input);
                             
@@ -248,7 +261,7 @@ int main() {
                                 turno_branco = !turno_branco;
                                 turno_numero++;
                                 estado = SELECIONANDO;
-
+                                
                                 sprintf(msg, "Turno do %s", turno_branco ? "BRANCO" : "PRETO");
                             }
                         }
