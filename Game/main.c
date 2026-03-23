@@ -194,36 +194,32 @@ int main() {
 
                     if (pode) {
 
-                        push(&tabuleiro[my][mx], 1);
                         
-                        visitadas[my][mx] = true;
+                        ant_i = ultima_i;
+                        ant_j = ultima_j;
                         ultima_i = my;
                         ultima_j = mx;
-                        ant_i = my;
-                        ant_j = mx;
-                        
+                        push(&tabuleiro[my][mx], 1);
+                        visitadas[my][mx] = true;
                         pop(mao);
-                        bool todos_vizinhos_ocupados = true;
-                        //x = coluna
-                        //y = linhas
-                        if ((mx + 1 < tam_input && !visitadas[my][mx + 1]) || (mx - 1 >= 0 && !visitadas[my][mx - 1]) || (my + 1 < tam_input && !visitadas[my + 1][mx]) || (my - 1 >= 0 && !visitadas[my - 1][mx])) {
-                            todos_vizinhos_ocupados = false;
-                            //verificar se (linha - 1 nao possui jogadas livres, l-1 se torna true, se a jogada for invalida, volta
-                            // as peças pra mao)
-                        }
-                        if(visitadas)
-                        sprintf(msg, "%d pecas restantes", mao->size);
+
+
                         
-                        if (todos_vizinhos_ocupados && mao->size >0  ) {
-                            devolve_mao(tabuleiro, visitadas, mao, tam_input);
-                            ultima_i = -1;
-                            ultima_j = -1;
-                            sprintf(msg, "Jogada cancelada! Continue jogando");
-                            visitadas[my][mx + 1] = false;
-                            visitadas[my][mx - 1] = false;
-                            visitadas[my + 1][mx] = false;
-                            visitadas[my - 1][mx] = false;
-                            continue;
+                        sprintf(msg, "%d pecas restantes", mao->size);
+
+                        if (mao->size > 0) {
+                            bool tem_vizinho_livre =
+                            (mx + 1 < tam_input  && !visitadas[my][mx + 1]) ||
+                            (mx - 1 >= 0         && !visitadas[my][mx - 1]) ||
+                            (my + 1 < tam_input  && !visitadas[my + 1][mx]) ||
+                            (my - 1 >= 0         && !visitadas[my - 1][mx]);
+
+                            if (!tem_vizinho_livre) {
+                                devolve_mao(tabuleiro, visitadas, mao, tam_input);
+                                ultima_i = -1;
+                                ultima_j = -1;
+                                sprintf(msg, "Bloqueado! Todas as pecas voltaram para a mao. Recomece a semeadura.");
+                            }
                         }
                         if (mao->size == 0) {
                             int capturadas = realizar_captura(tabuleiro, turno_branco, tam_input);
